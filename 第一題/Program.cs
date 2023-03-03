@@ -46,7 +46,10 @@ namespace 第一題
                 result.Add(p);
 
             }
-            
+
+            var category = result.GroupBy(x => x.Class);
+
+
             var a1 = result.Sum((x) => x.Price_int);
             Console.WriteLine("1.計算所有商品的總價格");
             Console.WriteLine(a1);
@@ -67,14 +70,12 @@ namespace 第一題
             Console.WriteLine(a4);
             Console.WriteLine();
 
-            //無法顯示名稱
-            var a5 = result.Max((x) => x.Price_int);
+            var a5 = result.OrderByDescending((x) => x.Price_int).First().Name;
             Console.WriteLine("5.找出哪一項商品最貴");
             Console.WriteLine(a5);
             Console.WriteLine();
 
-            //無法顯示名稱
-            var a6 = result.Min((x) => x.Price_int);
+            var a6 = result.OrderBy((x) => x.Price_int).First().Name;
             Console.WriteLine("6.找出哪一項商品最便宜");
             Console.WriteLine(a6);
             Console.WriteLine();
@@ -97,14 +98,28 @@ namespace 第一題
             }
             Console.WriteLine();
 
-            var a10 = result.Where((x) => x.Quantity_int > 100);
             Console.WriteLine("10. 找出各個商品類別底下有哪些商品的價格是大於1000的商品");
-            foreach (var a in a10)
+            foreach (var a in category)
             {
-                Console.WriteLine($"{ a.Class}\t{ a.Name}");
+                var item = a.Where(x => x.Price_int > 1000);
+
+                if (item != null)
+                {
+                    Console.WriteLine($"{a.Key}");
+                    foreach (var b in item)
+                    {
+                        Console.Write($"---{b.Name}\n");
+                    }
+                }
+                
+            }
+            Console.WriteLine("11. 呈上題，請計算該類別底下所有商品的平均價格");
+            foreach (var a in category)
+            {
+                Console.WriteLine($"{a.Key}類的平均價格為{a.Average(x => x.Price_int):N2}");
             }
             Console.WriteLine();
-
+                    
             var a12 = result.OrderByDescending((x) => x.Price_int);
             Console.WriteLine("12. 依照商品價格由高到低排序");
             foreach (var a in a12)
@@ -121,6 +136,24 @@ namespace 第一題
             }
             Console.WriteLine();
 
+
+            Console.WriteLine("14. 找出各商品類別底下，最貴的商品");
+            foreach (var a in category)
+            {
+                Console.WriteLine($"{a.Key}類中最貴的商品為{a.Max(x => x.Price_int)}");
+            }
+            Console.WriteLine();
+
+            Console.WriteLine("15. 找出各商品類別底下，最便宜的商品");
+            foreach (var a in category)
+            {
+                Console.WriteLine($"{a.Key}類中最便宜的商品為{a.Min(x => x.Price_int)}");
+            }
+            Console.WriteLine();
+
+
+
+
             var a16 = result.Where((x) => x.Price_int <= 10000);
             Console.WriteLine("16. 找出價格小於等於10000的商品");
             foreach (var a in a16)
@@ -128,7 +161,7 @@ namespace 第一題
                 Console.WriteLine(a.Name);
             }
 
-            //11.14.15.17沒做
+            
 
             Console.ReadLine();
 
